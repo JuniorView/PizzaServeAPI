@@ -14,7 +14,7 @@ import app.api.v1.endpoints.user.crud as user_crud
 from app.api.v1.endpoints.order.schemas \
     import OrderSchema, PizzaCreateSchema, JoinedPizzaPizzaTypeSchema, \
     PizzaWithoutPizzaTypeSchema, OrderBeverageQuantityCreateSchema, JoinedOrderBeverageQuantitySchema, \
-    OrderPriceSchema, OrderBeverageQuantityBaseSchema, OrderCreateSchema
+    OrderPriceSchema, OrderBeverageQuantityBaseSchema, OrderCreateSchema, OrderUpdateOrderStatusSchema
 from app.api.v1.endpoints.user.schemas import UserSchema
 from app.database.connection import SessionLocal
 
