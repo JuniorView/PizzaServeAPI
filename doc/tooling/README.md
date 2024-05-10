@@ -20,18 +20,34 @@ The following lists the tools and frameworks, that are used in the project.
 The following is a collection of short hints on how to do the most essential things in a GitLab CI/CD pipeline:
 
 - How to delay a job until another job is done: 
+  
+By using 'needs' you can specify dependencies between different jobs.
 
-- How to change the image used in a task: 
+- How to change the image used in a task:
+ 
+By using the 'image' key, you can specify the name of the Docker image. 
+You can further customize it by using two sub-keywords: 'name' to define the image name and 'entrypoint' to define the entrypoint.
     
 - How do you start a task manually:
 
+A job can be specified to run manually using the 'when: manual' syntax. Once defined, the job can be started in the GitLab Pipeline UI by clicking the "Play" button.
+
 - The Script part of the config file - what is it good for?
+
+The script part defines the commands or script to be executed as part of a job. It is good for automating repetitive tasks associated with the development lifecycle, error handling, logging, and output.
+
 
 - If I want a task to run for every branch I put it into the stage ??
 
+ + If I want a task to run for every branch I put it into the stage commit
+
 - If I want a task to run for every merge request I put it into the stage ??
+ 
+ +If I want a task to run for every merge request I put it into the stage acceptance
 
 - If I want a task to run for every commit to the main branch I put it into the stage ??
+
+ + If I want a task to run for every commit to the main branch I put it into the stage Release
 
 # flake8 / flakeheaven
 
