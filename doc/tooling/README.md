@@ -99,8 +99,14 @@ If you like it convenient: Add a button for flake8 to your toolbar!
 # SonarQube
 
 - What is the purpose of SonarQube?
++ SonarQube is used for writing clean code. It helps in managing Code Quality, it can perform static Code Analysis and Security Vulnerability Detection.
 
 - What is the purpose of the quality rules of SonarQube?
++ The quality rules are guidelines and criteria for evaluating the quality of code. There are four types of rules:
+   - Code Smell (maintainability domain)
+   - Bug (reliability domain)
+   - Vulnerability (security domain)
+   - Security hotspot (security domain)
 
 - What is the purpose of the quality gates of SonarQube?
 
