@@ -9,6 +9,8 @@ import app.api.v1.endpoints.beverage.crud as beverage_crud
 from app.api.v1.endpoints.beverage.schemas import BeverageSchema, BeverageCreateSchema, BeverageListItemSchema
 from app.database.connection import SessionLocal
 
+beverage_not_found = 'Beverage not found'
+
 
 def get_db():
     db = SessionLocal()
@@ -64,7 +66,7 @@ def update_beverage(
                 updated_beverage = beverage_crud.create_beverage(changed_beverage, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=404, detail=beverage_not_found)
 
     return updated_beverage
 
@@ -77,7 +79,7 @@ def get_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=404, detail=beverage_not_found)
 
     return beverage
 
@@ -89,7 +91,7 @@ def delete_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        raise HTTPException(status_code=404, detail='Item not found')
+        raise HTTPException(status_code=404, detail=beverage_not_found)
 
     beverage_crud.delete_beverage_by_id(beverage_id, db)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
