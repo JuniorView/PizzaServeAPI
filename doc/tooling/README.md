@@ -99,10 +99,24 @@ If you like it convenient: Add a button for flake8 to your toolbar!
 # SonarQube
 
 - What is the purpose of SonarQube?
++ SonarQube is used for writing clean code. It helps in managing Code Quality, it can perform static Code Analysis and Security Vulnerability Detection.
 
 - What is the purpose of the quality rules of SonarQube?
++ The quality rules are guidelines and criteria for evaluating the quality of code. There are four types of rules:
+   - Code Smell (maintainability domain)
+   - Bug (reliability domain)
+   - Vulnerability (security domain)
+   - Security hotspot (security domain)
 
 - What is the purpose of the quality gates of SonarQube?
+  The quality gates in SonarQube play a crucial role in maintaining and improving code quality by providing a structured and automated way to enforce quality standards. They help prevent poor-quality code from progressing through the development lifecycle, thus ensuring that the final product is robust, maintainable, and secure.
+  Quality gates in SonarQube are composed of various conditions that a project must meet:
+    -Code Coverage: The percentage of code covered by automated tests.
+    -New Bugs: The number of bugs introduced in the new code.
+    -New Vulnerabilities: The number of security vulnerabilities in the new code.
+    -New Code Smells: The number of maintainability issues in the new code.
+    -Duplicated Lines: The percentage of code duplication.
+    -Technical Debt: The estimated effort to fix all maintainability issues.
 
 
 ## Run SonarLint on your local Computer
