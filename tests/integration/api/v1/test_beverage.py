@@ -52,4 +52,3 @@ def test_beverage_create_read_delete(db):
     # Assert: Correct beverage was deleted from database
     deleted_beverage = beverage_crud.get_beverage_by_id(created_beverage_id, db)
     assert deleted_beverage is None
-    
