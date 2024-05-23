@@ -41,7 +41,6 @@ def test_beverage_create_read_delete(db):
 
     # Assert: Correct beverage was stored in database
     assert read_beverage.id == created_beverage_id
-    #assert read_beverage.beveragename == new_beverage_name
 
     # Act: Delete beverage
     beverage_crud.delete_beverage_by_id(created_beverage_id, db)
