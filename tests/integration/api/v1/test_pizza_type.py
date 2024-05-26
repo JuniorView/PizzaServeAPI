@@ -25,7 +25,7 @@ def test_pizza_type_create_read_delete(db):
         'name': 'Dough test name',
         'price': 10,
         'description': 'Dough test description',
-        'stock': 20
+        'stock': 20,
     }
 
     dough = DoughCreateSchema(**dough_data)
@@ -36,7 +36,7 @@ def test_pizza_type_create_read_delete(db):
         'name': new_pizza_type_name,
         'price': 25,
         'description': 'Pizza type test description',
-        'dough_id': db_dough.id
+        'dough_id': db_dough.id,
     }
 
     pizza_type = PizzaTypeCreateSchema(**pizza_type_data)
