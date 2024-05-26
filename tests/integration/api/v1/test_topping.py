@@ -24,7 +24,7 @@ def test_user_create_read_delete(db):
         name=new_topping_name,
         price=10,
         description='Nice Topping Test',
-        stock=100
+        stock=100,
     )
 
     # Act: Add topping to database
