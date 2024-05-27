@@ -97,6 +97,10 @@ integration_testing:
       junit: report_integration_tests.xml
     paths:
       - integration_coverage.xml
+    only:
+    - main
+    - branches
+    - merge_requests
 
 
 create_development_container_image:
