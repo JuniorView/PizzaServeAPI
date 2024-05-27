@@ -68,6 +68,8 @@ sonarqube-check:
     - merge_requests
   
 integration_testing:
+  needs:
+    - create_development_container_image
   stage: commit
   services:
     - name: postgres:15.0-alpine
@@ -88,6 +90,9 @@ integration_testing:
     PYTHONPATH=. alembic upgrade head
   script:
     PYTHONPATH=. pytest -x --junitxml=report_integration_tests.xml tests/integration/
+  artifacts:
+    reports:
+      junit: report_integration_tests.xml
 
 
 create_development_container_image:
