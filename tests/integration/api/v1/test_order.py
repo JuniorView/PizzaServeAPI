@@ -1,11 +1,10 @@
 import pytest
 
-
 import app.api.v1.endpoints.order.crud as order_crud
 import app.api.v1.endpoints.order.address.crud as address_crud
 import app.api.v1.endpoints.user.crud as user_crud
 from app.api.v1.endpoints.order.schemas import (
-    OrderCreateSchema, OrderStatus
+    OrderCreateSchema, OrderStatus,
 )
 from app.api.v1.endpoints.order.address.schemas import AddressCreateSchema
 from app.api.v1.endpoints.user.schemas import UserCreateSchema
@@ -30,7 +29,7 @@ def test_order_create_read_update_delete(db):
     # Arrange: Create a new address and user ID
     new_address = AddressCreateSchema(
         street='Test Street', post_code='12345', house_number=1, country='Test Country',
-        town='Test Town', first_name='John', last_name='Doe'
+        town='Test Town', first_name='John', last_name='Doe',
     )
 
     # Create an address in the database (used by the order)
@@ -77,4 +76,3 @@ def test_order_create_read_update_delete(db):
     # Assert: Correct order was deleted from database
     deleted_order = order_crud.get_order_by_id(created_order_id, db)
     assert deleted_order is None
-
