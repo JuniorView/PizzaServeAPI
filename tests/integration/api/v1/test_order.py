@@ -34,7 +34,6 @@ def test_order_create_read_update_delete(db):
 
     # Create an address in the database (used by the order)
     address = address_crud.create_address(new_address, db)
-    # address_id = address.id
 
     # Ensure number of orders before creating a new one
     number_of_orders_before = len(order_crud.get_all_orders(db))
