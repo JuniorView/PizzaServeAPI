@@ -56,6 +56,12 @@ def test_pizza_type_create_read_delete(db):
     assert read_pizza_type.id == created_pizza_type_id
     assert read_pizza_type.name == new_pizza_type_name
 
+    # Act: Re-read pizza_type from database with name
+    read_pizza_type_name = pizza_type_crud.get_pizza_type_by_name(new_pizza_type_name, db)
+
+    # Assert: Correct pizza_type was stored in database
+    assert read_pizza_type_name.id == created_pizza_type_id
+
     # Act: Delete pizza type
     pizza_type_crud.delete_pizza_type_by_id(created_pizza_type_id, db)
 
