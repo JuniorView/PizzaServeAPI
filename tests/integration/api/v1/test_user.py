@@ -15,7 +15,7 @@ def db():
 
 
 def test_user_create_read_delete(db):
-    new_user_name = 'test'
+    new_user_name = 'Test User'
     number_of_users_before = len(user_crud.get_all_users(db))
 
     # Arrange: Instantiate a new user object
@@ -35,6 +35,12 @@ def test_user_create_read_delete(db):
     # Assert: Correct user was stored in database
     assert read_user.id == created_user_id
     assert read_user.username == new_user_name
+
+    # Act: Re-read user from database with name
+    read_user_name = user_crud.get_user_by_username(new_user_name, db)
+
+    # Assert: Correct user was stored in database
+    assert read_user_name.id == created_user_id
 
     # Act: Delete user
     user_crud.delete_user_by_id(created_user_id, db)

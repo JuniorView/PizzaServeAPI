@@ -42,6 +42,12 @@ def test_user_create_read_delete(db):
     assert read_topping.id == created_topping_id
     assert read_topping.name == new_topping_name
 
+    # Act: Re-read topping from database with name
+    read_topping_name = topping_crud.get_topping_by_name(new_topping_name, db)
+
+    # Assert: Correct topping was stored in database
+    assert read_topping_name.id == created_topping_id
+
     # Act: Delete topping
     topping_crud.delete_topping_by_id(created_topping_id, db)
 
