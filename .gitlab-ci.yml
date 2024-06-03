@@ -224,6 +224,23 @@ migrate_database_in_staging:
   except:
     - schedules
 
+service_testing:
+  stage: acceptance
+  image: 
+    name: $CI_REGISTRY_IMAGE/$DEVELOPMENT_CONTAINER_NAME:$DEVELOPMENT_CONTAINER_TAG
+    entrypoint: [""]
+  needs:
+    - create_development_container_image
+    - migrate_database_in_staging
+  variables:
+    API_SERVER: http://mo2-blue.se-ss24.users.h-da.cloud
+    API_PORT: 30080
+  script:
+    - PYTHONPATH=. pytest --pspec --verbose --color=yes --junitxml=report_service_tests.xml tests/service/
+  only:
+    - main
+    - merge_requests
+
 deploy_application_to_production:
   stage: release
   image: dtzar/helm-kubectl:3.10.3
