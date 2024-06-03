@@ -233,7 +233,7 @@ service_testing:
     - create_development_container_image
     - migrate_database_in_staging
   variables:
-    API_SERVER: http://mo2-blue.se-ss24.users.h-da.cloud
+    API_SERVER: mo2-blue.se-ss24.users.h-da.cloud
     API_PORT: 30080
   script:
     - PYTHONPATH=. pytest --pspec --verbose --color=yes --junitxml=report_service_tests.xml tests/service/
