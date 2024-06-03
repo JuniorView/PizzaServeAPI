@@ -103,7 +103,17 @@ stages:
 
 #  - name: Edge Update - Check for status if we update beverage to an already existing name
 
+
 #  - name: Edge Update - Check for status 404 if we update with a non existing id
+  - name: Check for status 404 if we update with a non existing id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/00000000-0000-0000-0000-000000000000
+      method: PUT
+      json:
+        <<: *cola_beverage
+        name: "Sprite"
+    response:
+      status_code: 404
 
 # Check deleting beverages
 
