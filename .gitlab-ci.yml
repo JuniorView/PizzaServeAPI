@@ -236,7 +236,7 @@ service_testing:
     API_SERVER: mo2-blue.se-ss24.users.h-da.cloud
     API_PORT: 30080
   script:
-    - PYTHONPATH=. pytest --pspec --verbose --color=yes --junitxml=report_service_tests.xml tests/service/
+    - PYTHONPATH=. pytest --verbose --color=yes --junitxml=report_service_tests.xml tests/service/
   only:
     - main
     - merge_requests
