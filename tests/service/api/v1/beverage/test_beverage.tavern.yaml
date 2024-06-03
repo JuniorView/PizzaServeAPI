@@ -58,6 +58,12 @@ stages:
         id: "{beverage_id}"
 
 #  - name: Edge Read - Check for status 404 if we try to get an beverage with a not existing id 00000000-0000-0000-0000-000000000000
+  - name: Get beverage with a non existent id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/00000000-0000-0000-0000-000000000000
+      method: GET
+    response:
+      status_code: 404
 
   - name: Read - Get a list of beverages
     request:
@@ -102,9 +108,20 @@ stages:
           beverage_id2: id
 
 #  - name: Edge Update - Check for status if we update beverage to an already existing name
+  - name: Check for status 303 if we update beverage to an already existing name
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/{beverage_id}
+      method: PUT
+      json:
+        <<: *cola_beverage
+        name: "Sprite"
+    response:
+      status_code: 303
+      headers:
+        location: "http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/{beverage_id2}"
 
 
-#  - name: Edge Update - Check for status 404 if we update with a non existing id
+  #  - name: Edge Update - Check for status 404 if we update with a non existing id
   - name: Check for status 404 if we update with a non existing id
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/00000000-0000-0000-0000-000000000000
@@ -132,3 +149,9 @@ stages:
       status_code: 204
 
 #  - name: Edge Delete - Check for status 404 if we delete a non-existing id
+  - name: Delete - Delete beverage with non-existing id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/00000000-0000-0000-0000-000000000000
+      method: DELETE
+    response:
+      status_code: 404
