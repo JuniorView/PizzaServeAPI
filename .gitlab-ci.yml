@@ -229,8 +229,7 @@ service_testing:
   image: 
     name: $CI_REGISTRY_IMAGE/$DEVELOPMENT_CONTAINER_NAME:$DEVELOPMENT_CONTAINER_TAG
     entrypoint: [""]
-  needs:
-    - create_development_container_image
+  needs:    
     - migrate_database_in_staging
   variables:
     API_SERVER: mo2-blue.se-ss24.users.h-da.cloud
