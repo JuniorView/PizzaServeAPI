@@ -19,4 +19,3 @@ variables:
   dough_price: 1.50
   dough_description: "Test Dough"
   dough_stock: 10
-
