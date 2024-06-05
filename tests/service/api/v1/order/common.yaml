@@ -25,11 +25,48 @@ variables:
   address_first_name: "Rainer"
   address_last_name: "Zufall"
 
+  address2_street: "Schöfferstraße"
+  address2_post_code: "64295"
+  address2_fake_street: "Yeet"
+  address2_house_number: 3
+  address2_country: "Deutschland"
+  address2_town: "Darmstadt"
+  address2_first_name: "Rainer"
+  address2_last_name: "Zufall"
+
 
   topping1_quantity: 2
   topping2_quantity: 1
+  topping3_quantity: 5
+  topping4_quantity: 3
 
   cold: false
 
   price_no_toppings: 3
   price_2_toppings: 5
+
+  dough_name: "Neapolitan"
+  dough_price: 5.20
+  dough_description: "Neapolitan Dough"
+  dough_stock: 10
+
+  beverage_name: "Coca Cola"
+  beverage_price: 4.00
+  beverage_description: "Coca Cola"
+  beverage_stock: 20
+
+  pizza_name: "Pizza Speciale"
+  pizza_price: 11.50
+  pizza_description: "Pizza Speciale"
+
+  topping3_name: "Fungi"
+  topping3_price: 1.20
+  topping3_description: "Fungi"
+  topping3_stock: 10
+
+  topping4_name: "Ham"
+  topping4_price: 2.20
+  topping4_description: "Ham"
+  topping4_stock: 10
+
+  testUsername: "Lab Engineer"

@@ -4,48 +4,293 @@ test_name: Make sure server implements crud functionality for order endpoint
 
 includes:
   - !include common.yaml
-  - !include ../order/order_stage.yaml
-  - !include ../dough/dough_stage.yaml
-  - !include ../beverage/beverage_stage.yaml
-  - !include ../pizza_type/pizza_type_stage.yaml
-  - !include ../users/user_stage.yaml
-  - !include ../toppings/topping_stage.yaml
 
 stages:
   #Create Dough
-  - type: ref
-    id: create_dough2
-
-  #Get all Doughs
-  - name: Get a list of doughs
+  - name: Verify that status code equals 201 when we create a new dough and the dough is returned
+    # max_retries and delay_after needs to be set in first stage of each stage to wait for uvicorn
+    max_retries: 10
+    delay_after: 2
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/doughs
-      method: GET
-    response:
-      status_code: 200
-      json: !anylist
-        id: "{dough_id}"
+      json: &dough
         name: "{dough_name:s}"
         price: !float "{dough_price:f}"
         description: "{dough_description}"
-
-  #Create toppings
-  - type: ref
-    id: create_topping3
-
-  - type: ref
-    id: create_topping4
+        stock: !int "{dough_stock:d}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *dough
+        id: !anything
+      save:
+        json:
+          dough_id: id
 
   #Create Pizza-Type
+  - name: Verify that status code equals 201 when we create a new pizza and the pizza is returned
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/pizza-types
+      json: &speciale_type_request
+        name: "{pizza_name:s}"
+        price: !float "{pizza_price:f}"
+        description: "{pizza_description}"
+        dough_id: "{dough_id}"
+      method: POST
+    response:
+      status_code: 201
+      json: &speciale_type_response
+        name: "{pizza_name:s}"
+        price: !float "{pizza_price:f}"
+        description: "{pizza_description}"
+        id: !anything
+      save:
+        json:
+          pizza_type_id: id
+
+  #Create toppings
+  - name: Verify that status code equals 201 when we create a new topping and the topping is returned
+    # max_retries and delay_after needs to be set in first stage of each stage to wait for uvicorn
+    max_retries: 10
+    delay_after: 2
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings
+      json: &fungi_topping
+        name: "{topping3_name:s}"
+        price: !float "{topping3_price:f}"
+        description: "{topping3_description}"
+        stock: !int "{topping3_stock:d}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *fungi_topping
+        id: !anything
+      save:
+        json:
+          topping3_id: id
+
+  - name: Verify that status code equals 201 when we create a new topping and the topping is returned
+    # max_retries and delay_after needs to be set in first stage of each stage to wait for uvicorn
+    max_retries: 10
+    delay_after: 2
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings
+      json: &ham_topping
+        name: "{topping4_name:s}"
+        price: !float "{topping4_price:f}"
+        description: "{topping4_description}"
+        stock: !int "{topping4_stock:d}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *ham_topping
+        id: !anything
+      save:
+        json:
+          topping4_id: id
+
+  #Add Topping on Pizza_Type
+  - name: verify that status code equals 201 and the quantity and topping_id is returned when we create a topping pizza_type relation (put a topping on a pizza)
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/pizza-types/{pizza_type_id}/toppings
+      json: &fungi_pizza_speciale_topping_quantity
+        quantity: !int "{topping3_quantity:d}"
+        topping_id: "{topping3_id}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *fungi_pizza_speciale_topping_quantity
+
+  - name: verify that status code equals 201 and the quantity and topping_id is returned when we create a topping pizza_type relation (put a topping on a pizza)
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/pizza-types/{pizza_type_id}/toppings
+      json: &ham_pizza_speciale_topping_quantity
+        quantity: !int "{topping4_quantity:d}"
+        topping_id: "{topping4_id}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *ham_pizza_speciale_topping_quantity
+
+  #Create Beverage
+  - name: Create - Verify that status code equals 201 when we create a new beverage and the beverage is returned
+    # max_retries and delay_after needs to be set in first stage of each stage to wait for uvicorn
+    max_retries: 20
+    delay_after: 2
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages
+      json: &cola_beverage
+        name: "{beverage_name:s}"
+        price: !float "{beverage_price:f}"
+        description: "{beverage_description}"
+        stock: !int "{beverage_stock:d}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *cola_beverage
+        id: !anything
+      save:
+        json:
+          beverage_id: id
+
+  #Create a User
+  - id: create_user
+    name: Verify that status code equals 201 when we create a new user and the user is returned
+    # max_retries and delay_after needs to be set in first stage of each stage to wait for uvicorn
+    max_retries: 10
+    delay_after: 2
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/users
+      json:
+        username: "{testUsername:s}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        username: "{testUsername:s}"
+        id: !anything
+      save:
+        json:
+          test_user_id: id
+
+  #Create Order
+  - name: Verify that status code equals 201 when we create a new order and the order is returned
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order
+      method: POST
+      json:
+        user_id: "{test_user_id}"
+        address: &address
+          street: "{address2_street:s}"
+          post_code: "{address2_post_code:s}"
+          house_number: !int "{address2_house_number:d}"
+          country: "{address2_country:s}"
+          town: "{address2_town:s}"
+          first_name: "{address2_first_name:s}"
+          last_name: "{address2_last_name:s}"
+    response:
+      status_code: 201
+      json:
+        order_datetime: !anything
+        id: !anything
+        user_id: !anything
+        address:
+          <<: *address
+          id: !anything
+        order_status: !anything
+      save:
+        json:
+          address_id: address.id
+          order_id: id
+          datetime: order_datetime
+          order_status: status
+
+  #Add Pizza to Order
+  - name: Add Pizza to Order and verify 200 status code
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/pizzas
+      method: POST
+      json:
+        pizza_type_id: "{pizza_type_id}"
+    response:
+      status_code: 200
+      json:
+        id: !anything
+      save:
+        json:
+          pizza_id: id
+
+  #Add valid Beverage to Order
+  - name: verify that status code equals 201 and the quantity and beverage_id is returned when we create a beverage order relation (add a beverage to an order)
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/beverages
+      json: &order_cola_beverage_quantity
+        quantity: !int "{order_beverage_quantity_1:d}"
+        beverage_id: "{beverage_id}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *order_cola_beverage_quantity
 
 #---------------------Delete Everything-----------------------------------
-  #Delete Dough
-  - type: ref
-    id: delete_dough2
+
+  #Delete Beverages from Order
+  - name: verify that status code equals 204 when delete the remaining beverages
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/beverages?beverage_id={beverage_id}
+      method: DELETE
+    response:
+      status_code: 204
+
+  #Delete Pizza from Order
+  - name: Delete Pizza from Order
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/pizzas
+      method: DELETE
+      json:
+        id: "{pizza_id}"
+    response:
+      status_code: 200
+
+  #Delete Pizza_Type
+  - name: Delete pizza_type with id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/pizza-types/{pizza_type_id}
+      method: DELETE
+    response:
+      status_code: 204
 
   #Delete Toppings
-  - type: ref
-    id: delete_topping_3
+  - name: Delete topping with id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings/{topping3_id}
+      method: DELETE
+    response:
+      status_code: 204
 
-  - type: ref
-    id: delete_topping_4
+  - name: Delete topping with id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings/{topping4_id}
+      method: DELETE
+    response:
+      status_code: 204
+
+  #Delete Dough
+  - name: Delete dough with id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/doughs/{dough_id}
+      method: DELETE
+    response:
+      status_code: 204
+
+  #Delete Beverage
+  - name: Delete beverage with id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages/{beverage_id}
+      method: DELETE
+    response:
+      status_code: 204
+
+  #Delete Order
+  - name: Delete existing order and verify 204
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}
+      method: DELETE
+    response:
+      status_code: 204
+
+  #Delete User
+  - name: Delete test user
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/users/{test_user_id}
+      method: DELETE
+    response:
+      status_code: 204
+
