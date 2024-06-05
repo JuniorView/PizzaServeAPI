@@ -1,0 +1,51 @@
+---
+
+test_name: Make sure server implements crud functionality for order endpoint
+
+includes:
+  - !include common.yaml
+  - !include ../order/order_stage.yaml
+  - !include ../dough/dough_stage.yaml
+  - !include ../beverage/beverage_stage.yaml
+  - !include ../pizza_type/pizza_type_stage.yaml
+  - !include ../users/user_stage.yaml
+  - !include ../toppings/topping_stage.yaml
+
+stages:
+  #Create Dough
+  - type: ref
+    id: create_dough2
+
+  #Get all Doughs
+  - name: Get a list of doughs
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/doughs
+      method: GET
+    response:
+      status_code: 200
+      json: !anylist
+        id: "{dough_id}"
+        name: "{dough_name:s}"
+        price: !float "{dough_price:f}"
+        description: "{dough_description}"
+
+  #Create toppings
+  - type: ref
+    id: create_topping3
+
+  - type: ref
+    id: create_topping4
+
+  #Create Pizza-Type
+
+#---------------------Delete Everything-----------------------------------
+  #Delete Dough
+  - type: ref
+    id: delete_dough2
+
+  #Delete Toppings
+  - type: ref
+    id: delete_topping_3
+
+  - type: ref
+    id: delete_topping_4

@@ -16,6 +16,16 @@ variables:
   topping2_description: "corny"
   topping2_stock: 10
 
+  topping3_name: "Fungi"
+  topping3_price: 1.20
+  topping3_description: "Fungi"
+  topping3_stock: 10
+
+  topping4_name: "Ham"
+  topping4_price: 2.20
+  topping4_description: "Ham"
+  topping4_stock: 10
+
 stages:
 
   - id: create_topping
@@ -56,6 +66,44 @@ stages:
         json:
           topping2_id: id
 
+  - id: create_topping_3
+    name: Verify that status code equals 201 when we create a new topping and the topping is returned
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings
+      json: &fungi_topping
+        name: "{topping3_name:s}"
+        price: !float "{topping3_price:f}"
+        description: "{topping3_description}"
+        stock: !int "{topping3_stock:d}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *fungi_topping
+        id: !anything
+      save:
+        json:
+          topping3_id: id
+
+  - id: create_topping_4
+    name: Verify that status code equals 201 when we create a new topping and the topping is returned
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings
+      json: &ham_topping
+        name: "{topping4_name:s}"
+        price: !float "{topping4_price:f}"
+        description: "{topping4_description}"
+        stock: !int "{topping4_stock:d}"
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *ham_topping
+        id: !anything
+      save:
+        json:
+          topping4_id: id
+
   - id: delete_topping
     name: Delete topping with id
     request:
@@ -71,3 +119,19 @@ stages:
         method: DELETE
     response:
         status_code: 204
+
+  - id: delete_topping_3
+    name: Delete topping with id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings/{topping3_id}
+      method: DELETE
+    response:
+      status_code: 204
+
+  - id: delete_topping_4
+    name: Delete topping with id
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings/{topping4_id}
+      method: DELETE
+    response:
+      status_code: 204
