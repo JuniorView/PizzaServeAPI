@@ -49,6 +49,19 @@ stages:
         json:
           pizza_type_id: id
 
+  # Edge Case: Invalid Pizza Type Creation
+  - name: Verify that status code equals 404 when creating pizza with non-existent dough ID
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/pizza-types
+      json:
+        name: "Invalid Pizza"
+        price: 12.0
+        description: "Invalid pizza"
+        dough_id: "123e4567-e89b-12d3-a456-426614174000"
+      method: POST
+    response:
+      status_code: 404
+
   #Create toppings
   - name: Verify that status code equals 201 when we create a new topping and the topping is returned
     # max_retries and delay_after needs to be set in first stage of each stage to wait for uvicorn
@@ -92,6 +105,7 @@ stages:
         json:
           topping4_id: id
 
+
   #Add Topping on Pizza_Type
   - name: verify that status code equals 201 and the quantity and topping_id is returned when we create a topping pizza_type relation (put a topping on a pizza)
     request:
@@ -118,7 +132,7 @@ stages:
         <<: *ham_pizza_speciale_topping_quantity
 
   #Create Beverage
-  - name: Create - Verify that status code equals 201 when we create a new beverage and the beverage is returned
+  - name: Create Verify that status code equals 201 when we create a new beverage and the beverage is returned
     # max_retries and delay_after needs to be set in first stage of each stage to wait for uvicorn
     max_retries: 20
     delay_after: 2
@@ -139,6 +153,20 @@ stages:
         json:
           beverage_id: id
 
+
+    # Edge Case: Duplicate Beverage Creation
+  - name: Verify that status code equals 303 when creating a beverage with the same name again
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/beverages
+      json:
+        name: "{beverage_name:s}"
+        price: 2.0
+        description: "Duplicate beverage"
+        stock: 100
+      method: POST
+    response:
+      status_code: 303
+
   #Create a User
   - id: create_user
     name: Verify that status code equals 201 when we create a new user and the user is returned
@@ -158,6 +186,7 @@ stages:
       save:
         json:
           test_user_id: id
+
 
   #Create Order
   - name: Verify that status code equals 201 when we create a new order and the order is returned
@@ -191,6 +220,17 @@ stages:
           datetime: order_datetime
           order_status: status
 
+  # Edge Case: Invalid Order Creation
+  - name: Verify that status code equals 404 when creating order with non-existent user ID
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order
+      method: POST
+      json:
+        user_id: "123e4567-e89b-12d3-a456-426614174000"
+        address: *address
+    response:
+      status_code: 404
+
   #Add Pizza to Order
   - name: Add Pizza to Order and verify 200 status code
     request:
@@ -219,6 +259,17 @@ stages:
       json:
         <<: *order_cola_beverage_quantity
 
+  # Edge Case: Add Non-existent Beverage to Order
+  - name: Verify that status code equals 404 when adding non-existent beverage to order
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/beverages
+      json:
+        quantity: 1
+        beverage_id: "123e4567-e89b-12d3-a456-426614174000"
+      method: POST
+    response:
+      status_code: 404
+
 #---------------------Delete Everything-----------------------------------
 
   #Delete Beverages from Order
@@ -229,6 +280,14 @@ stages:
     response:
       status_code: 204
 
+    # Edge Case: Delete Non-existent Beverage from Order
+  - name: Verify that status code equals 404 when deleting non-existent beverage from order
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/beverages?beverage_id=123e4567-e89b-12d3-a456-426614174000
+      method: DELETE
+    response:
+      status_code: 404
+
   #Delete Pizza from Order
   - name: Delete Pizza from Order
     request:
@@ -238,6 +297,16 @@ stages:
         id: "{pizza_id}"
     response:
       status_code: 200
+
+  # Edge Case: Delete Non-existent Pizza from Order
+  - name: Verify that status code equals 404 when deleting non-existent pizza from order
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/pizzas
+      method: DELETE
+      json:
+        id: "123e4567-e89b-12d3-a456-426614174000"
+    response:
+      status_code: 404
 
   #Delete Pizza_Type
   - name: Delete pizza_type with id
@@ -255,6 +324,14 @@ stages:
     response:
       status_code: 204
 
+  # Edge Case: Delete Non-existent Topping
+  - name: Verify that status code equals 404 when deleting non-existent topping
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings/123e4567-e89b-12d3-a456-426614174000
+      method: DELETE
+    response:
+      status_code: 404
+
   - name: Delete topping with id
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/toppings/{topping4_id}
@@ -269,6 +346,14 @@ stages:
       method: DELETE
     response:
       status_code: 204
+
+  # Edge Case: Delete Non-existent Dough
+  - name: Verify that status code equals 404 when deleting non-existent dough
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/doughs/123e4567-e89b-12d3-a456-426614174000
+      method: DELETE
+    response:
+      status_code: 404
 
   #Delete Beverage
   - name: Delete beverage with id
@@ -286,6 +371,14 @@ stages:
     response:
       status_code: 204
 
+  # Edge Case: Delete Non-existent Order
+  - name: Verify that status code equals 404 when deleting non-existent order
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/123e4567-e89b-12d3-a456-426614174000
+      method: DELETE
+    response:
+      status_code: 404
+
   #Delete User
   - name: Delete test user
     request:
@@ -294,3 +387,10 @@ stages:
     response:
       status_code: 204
 
+  # Edge Case: Delete Non-existent User
+  - name: Verify that status code equals 404 when deleting non-existent user
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/users/123e4567-e89b-12d3-a456-426614174000
+      method: DELETE
+    response:
+      status_code: 404
