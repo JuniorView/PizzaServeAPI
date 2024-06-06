@@ -1,4 +1,5 @@
 import uuid
+import logging
 
 from sqlalchemy.orm import Session
 
@@ -10,16 +11,19 @@ def create_dough(schema: DoughCreateSchema, db: Session):
     entity = Dough(**schema.dict())
     db.add(entity)
     db.commit()
+    logging.info('Dough created with name {} and ID {}'.format(entity.name, entity.id))
     return entity
 
 
 def get_dough_by_id(dough_id: uuid.UUID, db: Session):
     entity = db.query(Dough).filter(Dough.id == dough_id).first()
+    logging.info('get dough by id {}'.format(dough_id))
     return entity
 
 
 def get_dough_by_name(dough_name: str, db: Session):
     entity = db.query(Dough).filter(Dough.name == dough_name).first()
+    logging.info('get dough by name {}'.format(dough_name))
     return entity
 
 

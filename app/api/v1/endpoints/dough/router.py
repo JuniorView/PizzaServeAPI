@@ -1,4 +1,5 @@
 import uuid
+import logging
 from typing import List
 
 from fastapi import APIRouter, Depends, Request, Response, status, HTTPException
@@ -34,10 +35,12 @@ def create_dough(dough: DoughCreateSchema,
                  ):
     dough_found = dough_crud.get_dough_by_name(dough.name, db)
     if dough_found:
+        logging.warning('Dough already exists with name {}'.format(dough_found.name))
         url = request.url_for('get_dough', dough_id=dough_found.id)
         return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
 
     new_dough = dough_crud.create_dough(dough, db)
+    logging.info('Dough created with name {}'.format(new_dough.name))
     return new_dough
 
 
@@ -55,16 +58,20 @@ def update_dough(
     if dough_found:
         if dough_found.name == changed_dough.name:
             dough_crud.update_dough(dough_found, changed_dough, db)
+            logging.warning('No changes detected for dough with Name {}'.format(dough_found.name))
             return Response(status_code=status.HTTP_204_NO_CONTENT)
         else:
             dough_name_found = dough_crud.get_dough_by_name(changed_dough.name, db)
             if dough_name_found:
                 url = request.url_for('get_dough', dough_id=dough_name_found.id)
+                logging.warning('Dough already exists with name {}'.format(dough_name_found.name))
                 return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
             else:
                 updated_dough = dough_crud.create_dough(changed_dough, db)
+                logging.info('Dough updated with name {}'.format(updated_dough.name))
                 response.status_code = status.HTTP_201_CREATED
     else:
+        logging.warning('Dough not found with id {}'.format(dough_id))
         raise HTTPException(status_code=404, detail=dough_not_found)
 
     return updated_dough
@@ -77,6 +84,7 @@ def get_dough(dough_id: uuid.UUID,
     dough = dough_crud.get_dough_by_id(dough_id, db)
 
     if not dough:
+        logging.warning('Dough not found with id {}'.format(dough_id))
         raise HTTPException(status_code=404, detail=dough_not_found)
     return dough
 
@@ -86,7 +94,9 @@ def delete_dough(dough_id: uuid.UUID, db: Session = Depends(get_db)):
     dough = dough_crud.get_dough_by_id(dough_id, db)
 
     if not dough:
+        logging.warning('Dough not found with id {}'.format(dough_id))
         raise HTTPException(status_code=404, detail=dough_not_found)
 
     dough_crud.delete_dough_by_id(dough_id, db)
+    logging.info('Dough deleted with id {}'.format(dough_id))
     return Response(status_code=status.HTTP_204_NO_CONTENT)
