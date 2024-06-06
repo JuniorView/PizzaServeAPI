@@ -1,4 +1,5 @@
 import uuid
+import logging
 from typing import List, TypeVar
 
 from fastapi import APIRouter, Depends, Request, Response, status, HTTPException
@@ -43,15 +44,19 @@ def create_pizza_type(
     pizza_type_found = pizza_type_crud.get_pizza_type_by_name(pizza_type.name, db)
 
     if pizza_type_found:
+        logging.error(
+            'Pizza type already exists with name {} and ID {}'.format(pizza_type_found.name, pizza_type_found.ID))
         url = request.url_for('get_pizza_type', pizza_type_id=pizza_type_found.id)
         return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
 
     dough = dough_crud.get_dough_by_id(pizza_type.dough_id, db)
     if not dough:
+        logging.error('Dough with ID not found.')
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     new_pizza_type = pizza_type_crud.create_pizza_type(pizza_type, db)
     response.status_code = status.HTTP_201_CREATED
+    logging.info('Pizza type created with name {} and ID {}'.format(new_pizza_type.name, new_pizza_type.ID))
     return new_pizza_type
 
 
@@ -74,11 +79,15 @@ def update_pizza_type(
             pizza_type_name_found = pizza_type_crud.get_pizza_type_by_name(changed_pizza_type.name, db)
             if pizza_type_name_found:
                 url = request.url_for('get_pizza_type', pizza_type_id=pizza_type_name_found.id)
+                logging.error(
+                    'Pizza type already exists with name {} and ID {}'.format(
+                        pizza_type_name_found.name, pizza_type_name_found.ID))
                 return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
             else:
                 updated_pizza_type = pizza_type_crud.create_pizza_type(changed_pizza_type, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
+        logging.error('Pizza type not found with id {}'.format(pizza_type_id))
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     return updated_pizza_type
@@ -92,6 +101,7 @@ def get_pizza_type(
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
+        logging.error('Pizza type not found with id {}'.format(pizza_type_id))
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     return pizza_type
@@ -104,6 +114,7 @@ def delete_pizza_type(pizza_type_id: uuid.UUID,
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
+        logging.error('Pizza type not found with id {}'.format(pizza_type_id))
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     pizza_type_crud.delete_pizza_type_by_id(pizza_type_id, db)
@@ -135,6 +146,7 @@ def get_pizza_type_toppings(
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
+        logging.error('Pizza type not found with id {}'.format(pizza_type_id))
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     toppings = pizza_type.toppings
@@ -159,9 +171,11 @@ def create_pizza_type_topping(
 ):
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
     if not pizza_type:
+        logging.error('Pizza type not found with id {}'.format(pizza_type_id))
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     if not topping_crud.get_topping_by_id(topping_quantity.topping_id, db):
+        logging.error('Pizza type topping not found with id {}'.format(pizza_type_id))
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     topping_quantity_found = pizza_type_crud.get_topping_quantity_by_id(pizza_type_id, topping_quantity.topping_id, db)
@@ -186,6 +200,7 @@ def get_pizza_type_dough(
     pizza_type = pizza_type_crud.get_pizza_type_by_id(pizza_type_id, db)
 
     if not pizza_type:
+        logging.error('Pizza type not found with id {}'.format(pizza_type_id))
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
     dough = pizza_type.dough
