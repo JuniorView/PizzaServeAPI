@@ -37,7 +37,7 @@ def create_beverage(beverage: BeverageCreateSchema,
     beverage_found = beverage_crud.get_beverage_by_name(beverage.name, db)
 
     if beverage_found:
-        logging.warning('Beverage already exists with name {}'.format(beverage_found.name))
+        logging.error('Beverage already exists with name {}'.format(beverage_found.name))
         url = request.url_for('get_beverage', beverage_id=beverage_found.id)
         return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
 
@@ -59,19 +59,19 @@ def update_beverage(
     if beverage_found:
         if beverage_found.name == changed_beverage.name:
             beverage_crud.update_beverage(beverage_found, changed_beverage, db)
-            logging.warning('No changes detected for beverage with Name {}'.format(beverage_found.name))
+            logging.error('No changes detected for beverage with Name {}'.format(beverage_found.name))
             return Response(status_code=status.HTTP_204_NO_CONTENT)
         else:
             beverage_name_found = beverage_crud.get_beverage_by_name(changed_beverage.name, db)
             if beverage_name_found:
                 url = request.url_for('get_beverage', beverage_id=beverage_name_found.id)
-                logging.warning('Beverage already exists with name {}'.format(beverage_found.name))
+                logging.error('Beverage already exists with name {}'.format(beverage_found.name))
                 return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
             else:
                 updated_beverage = beverage_crud.create_beverage(changed_beverage, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
-        logging.warning('Beverage not found with id {}'.format(beverage_id))
+        logging.error('Beverage not found with id {}'.format(beverage_id))
         raise HTTPException(status_code=404, detail=beverage_not_found)
 
     return updated_beverage
@@ -85,7 +85,7 @@ def get_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        logging.warning('Beverage not found with id {}'.format(beverage_id))
+        logging.error('Beverage not found with id {}'.format(beverage_id))
         raise HTTPException(status_code=404, detail=beverage_not_found)
 
     return beverage
@@ -98,7 +98,7 @@ def delete_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        logging.warning('Beverage not found with id {}'.format(beverage_id))
+        logging.error('Beverage not found with id {}'.format(beverage_id))
         raise HTTPException(status_code=404, detail=beverage_not_found)
 
     beverage_crud.delete_beverage_by_id(beverage_id, db)
