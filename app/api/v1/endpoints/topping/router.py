@@ -1,3 +1,4 @@
+import logging
 import uuid
 from typing import List
 
@@ -36,10 +37,12 @@ def create_topping(topping: ToppingCreateSchema,
     topping_found = topping_crud.get_topping_by_name(topping.name, db)
 
     if topping_found:
+        logging.warning(f'Topping {topping.name} already exists')
         url = request.url_for('get_topping', topping_id=topping_found.id)
         return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
 
     new_topping = topping_crud.create_topping(topping, db)
+    logging.info(f'Topping created with name {new_topping.name} and ID {new_topping.id}')
     return new_topping
 
 
@@ -61,12 +64,15 @@ def update_topping(
         else:
             topping_name_found = topping_crud.get_topping_by_name(changed_topping.name, db)
             if topping_name_found:
+                logging.warning(f'Topping already exists with name {topping_name_found.name}'
+                                f'and ID {topping_name_found.id}')
                 url = request.url_for('get_topping', topping_id=topping_name_found.id)
                 return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
             else:
                 updated_topping = topping_crud.create_topping(changed_topping, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
+        logging.warning(f'Topping type not found with id {topping_id}')
         raise HTTPException(status_code=404, detail=topping_not_found)
 
     return updated_topping
@@ -80,6 +86,7 @@ def get_topping(topping_id: uuid.UUID,
     topping = topping_crud.get_topping_by_id(topping_id, db)
 
     if not topping:
+        logging.warning(f'Topping type not found with id {topping_id}')
         raise HTTPException(status_code=404, detail=topping_not_found)
 
     return topping
@@ -90,7 +97,9 @@ def delete_topping(topping_id: uuid.UUID, db: Session = Depends(get_db)):
     topping = topping_crud.get_topping_by_id(topping_id, db)
 
     if not topping:
+        logging.warning(f'Topping type not found with id {topping_id}')
         raise HTTPException(status_code=404, detail=topping_not_found)
 
     topping_crud.delete_topping_by_id(topping_id, db)
+    logging.info(f'Topping deleted with id {topping_id}')
     return Response(status_code=status.HTTP_204_NO_CONTENT)

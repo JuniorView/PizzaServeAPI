@@ -1,4 +1,5 @@
 import uuid
+import logging
 
 from sqlalchemy.orm import Session
 
@@ -10,6 +11,7 @@ def create_topping(schema: ToppingCreateSchema, db: Session):
     entity = Topping(**schema.dict())
     db.add(entity)
     db.commit()
+    logging.info('Topping created with name {} and ID {}'.format(entity.name, entity.id))
     return entity
 
 
