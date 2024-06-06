@@ -1,4 +1,5 @@
 import uuid
+import logging
 
 from sqlalchemy.orm import Session
 
@@ -11,6 +12,7 @@ def create_address(schema: AddressCreateSchema, db: Session):
 
     db.add(entity)
     db.commit()
+    logging.info(f'Added new address: {entity.id} for user {entity.last_name} {entity.first_name}')
     return entity
 
 

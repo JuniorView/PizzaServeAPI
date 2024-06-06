@@ -1,3 +1,4 @@
+import logging
 import uuid
 from typing import List
 
@@ -17,6 +18,7 @@ def create_order(schema: OrderCreateSchema, db: Session):
     order.order_status = OrderStatus.TRANSMITTED
     db.add(order)
     db.commit()
+    logging.info(f'Order created with ID {order.id}')
     return order
 
 
@@ -52,6 +54,7 @@ def create_pizza(pizza_type: PizzaType,
         entity.pizza_type_id = pizza_type.id
     db.add(entity)
     db.commit()
+    logging.info(f'Pizza created with ID {entity.id}')
     return entity
 
 
@@ -61,6 +64,7 @@ def add_pizza_to_order(order: Order, pizza_type: PizzaType,
     order.pizzas.append(pizza)
     db.commit()
     db.refresh(order)
+    logging.info(f'Pizza added with ID {order.id}')
     return pizza
 
 
