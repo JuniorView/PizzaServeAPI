@@ -1,4 +1,5 @@
 import uuid
+import logging
 
 from sqlalchemy.orm import Session
 
@@ -10,16 +11,19 @@ def create_beverage(schema: BeverageCreateSchema, db: Session):
     entity = Beverage(**schema.dict())
     db.add(entity)
     db.commit()
+    logging.info('Beverage created with name {} and ID {}'.format(entity.name, entity.id))
     return entity
 
 
 def get_beverage_by_id(beverage_id: uuid.UUID, db: Session):
     entity = db.query(Beverage).filter(Beverage.id == beverage_id).first()
+    logging.info('get beverage by id {}'.format(beverage_id))
     return entity
 
 
 def get_beverage_by_name(beverage_name: str, db: Session):
     entity = db.query(Beverage).filter(Beverage.name == beverage_name).first()
+    logging.info('get beverage by name {}'.format(beverage_name))
     return entity
 
 
