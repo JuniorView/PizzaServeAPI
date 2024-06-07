@@ -32,7 +32,7 @@ stages:
   - name: Verify that status code equals 201 when we create a new pizza and the pizza is returned
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/pizza-types
-      json: &speciale_type_request
+      json: &pizza
         name: "{pizza_name:s}"
         price: !float "{pizza_price:f}"
         description: "{pizza_description}"
@@ -40,7 +40,8 @@ stages:
       method: POST
     response:
       status_code: 201
-      json: &speciale_type_response
+      json:
+        <<: *pizza
         name: "{pizza_name:s}"
         price: !float "{pizza_price:f}"
         description: "{pizza_description}"
@@ -57,7 +58,7 @@ stages:
         name: "Invalid Pizza"
         price: 12.0
         description: "Invalid pizza"
-        dough_id: "123e4567-e89b-12d3-a456-426614174000"
+        dough_id: "{not_available_id}"
       method: POST
     response:
       status_code: 404

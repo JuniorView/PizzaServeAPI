@@ -45,7 +45,7 @@ def create_pizza_type(
 
     if pizza_type_found:
         logging.error(
-            'Pizza type already exists with name {} and ID {}'.format(pizza_type_found.name, pizza_type_found.ID))
+            'Pizza type already exists with name {} and ID {}'.format(pizza_type_found.name, pizza_type_found.id))
         url = request.url_for('get_pizza_type', pizza_type_id=pizza_type_found.id)
         return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
 
@@ -56,7 +56,7 @@ def create_pizza_type(
 
     new_pizza_type = pizza_type_crud.create_pizza_type(pizza_type, db)
     response.status_code = status.HTTP_201_CREATED
-    logging.info('Pizza type created with name {} and ID {}'.format(new_pizza_type.name, new_pizza_type.ID))
+    logging.info('Pizza type created with name {} and ID {}'.format(new_pizza_type.name, new_pizza_type.id))
     return new_pizza_type
 
 
@@ -81,7 +81,7 @@ def update_pizza_type(
                 url = request.url_for('get_pizza_type', pizza_type_id=pizza_type_name_found.id)
                 logging.error(
                     'Pizza type already exists with name {} and ID {}'.format(
-                        pizza_type_name_found.name, pizza_type_name_found.ID))
+                        pizza_type_name_found.name, pizza_type_name_found.id))
                 return RedirectResponse(url=url, status_code=status.HTTP_303_SEE_OTHER)
             else:
                 updated_pizza_type = pizza_type_crud.create_pizza_type(changed_pizza_type, db)
