@@ -54,10 +54,11 @@ def create_pizza_type(
         logging.error('Dough with ID not found.')
         raise HTTPException(status_code=404, detail=pizza_type_not_found)
 
-    new_pizza_type = pizza_type_crud.create_pizza_type(pizza_type, db)
-    response.status_code = status.HTTP_201_CREATED
-    logging.info('Pizza type created with name {} and ID {}'.format(new_pizza_type.name, new_pizza_type.id))
-    return new_pizza_type
+    if not pizza_type_found:
+        new_pizza_type = pizza_type_crud.create_pizza_type(pizza_type, db)
+        response.status_code = status.HTTP_201_CREATED
+        logging.info('Pizza type created with name {}'.format(new_pizza_type.name))
+        return new_pizza_type
 
 
 @router.put('/{pizza_type_id}', response_model=PizzaTypeSchema, tags=['pizza_type'])

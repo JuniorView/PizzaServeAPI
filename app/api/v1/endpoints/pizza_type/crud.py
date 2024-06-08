@@ -13,7 +13,7 @@ def create_pizza_type(schema: PizzaTypeCreateSchema, db: Session):
     entity = PizzaType(**schema.dict())
     db.add(entity)
     db.commit()
-    logging.info('Pizza type created')
+    logging.info('Pizza type created with Name {} and ID {}'.format(entity.name, entity.id))
     return entity
 
 

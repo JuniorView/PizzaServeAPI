@@ -40,8 +40,8 @@ stages:
       method: POST
     response:
       status_code: 201
-      json:
-        <<: *pizza
+      json: &pizzaresponse
+        #<<: *pizza
         name: "{pizza_name:s}"
         price: !float "{pizza_price:f}"
         description: "{pizza_description}"
