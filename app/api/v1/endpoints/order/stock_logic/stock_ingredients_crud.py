@@ -33,3 +33,4 @@ def increase_stock_of_ingredients(pizza_type: PizzaType, db: Session):
         topping_quantity.topping.stock += topping_quantity.quantity
 
     db.commit()
+    logging.info(f'Increased stock of dough {pizza_type.dough_id}')

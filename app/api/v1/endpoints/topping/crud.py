@@ -17,11 +17,15 @@ def create_topping(schema: ToppingCreateSchema, db: Session):
 
 def get_topping_by_id(topping_id: uuid.UUID, db: Session):
     entity = db.query(Topping).filter(Topping.id == topping_id).first()
+    if not entity:
+        logging.error('Topping not found with ID {}'.format(topping_id))
     return entity
 
 
 def get_topping_by_name(topping_name: str, db: Session):
     entity = db.query(Topping).filter(Topping.name == topping_name).first()
+    if not entity:
+        logging.error('Topping not found with name {}'.format(topping_name))
     return entity
 
 
@@ -34,6 +38,8 @@ def get_all_toppings(db: Session):
                 **{'id': entity.id, 'name': entity.name, 'price': entity.price, 'description': entity.description})
             return_entities.append(list_item_entity)
         return return_entities
+    else:
+        logging.warning('No toppings found.')
     return entities
 
 
@@ -43,6 +49,7 @@ def update_topping(topping: Topping, changed_topping: ToppingCreateSchema, db: S
 
     db.commit()
     db.refresh(topping)
+    logging.info('Topping updated with ID {}'.format(topping.id))
     return topping
 
 
@@ -51,3 +58,4 @@ def delete_topping_by_id(topping_id: uuid.UUID, db: Session):
     if entity:
         db.delete(entity)
         db.commit()
+        logging.info('Topping deleted with ID {}'.format(topping_id))

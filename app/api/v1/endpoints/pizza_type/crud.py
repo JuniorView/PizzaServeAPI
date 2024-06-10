@@ -19,11 +19,19 @@ def create_pizza_type(schema: PizzaTypeCreateSchema, db: Session):
 
 def get_pizza_type_by_id(pizza_type_id: uuid.UUID, db: Session):
     entity = db.query(PizzaType).filter(PizzaType.id == pizza_type_id).first()
+    if entity:
+        logging.info('Pizza type with ID {} was found'.format(entity.id))
+    else:
+        logging.warning('Pizza type with ID {} was not found'.format(pizza_type_id))
     return entity
 
 
 def get_pizza_type_by_name(pizza_type_name: str, db: Session):
     entity = db.query(PizzaType).filter(PizzaType.name == pizza_type_name).first()
+    if entity:
+        logging.info('Pizza type with name {} was found'.format(entity.name))
+    else:
+        logging.warning('pizza type not found with name {}'.format(pizza_type_name))
     return entity
 
 
@@ -38,6 +46,7 @@ def update_pizza_type(pizza_type: PizzaType, changed_pizza_type: PizzaTypeCreate
 
     db.commit()
     db.refresh(pizza_type)
+    logging.info('updated pizza type with id {}'.format(pizza_type))
     return pizza_type
 
 
@@ -46,6 +55,9 @@ def delete_pizza_type_by_id(pizza_type_id: uuid.UUID, db: Session):
     if entity:
         db.delete(entity)
         db.commit()
+        logging.info('Deleted pizza type with ID {}'.format(pizza_type_id))
+    else:
+        logging.warning('No pizza type found with ID {}'.format(pizza_type_id))
 
 
 def create_topping_quantity(
@@ -57,6 +69,7 @@ def create_topping_quantity(
     pizza_type.toppings.append(entity)
     db.commit()
     db.refresh(pizza_type)
+    logging.info('Created topping quantity for pizza type with ID {}'.format(pizza_type.id))
     return entity
 
 
@@ -69,6 +82,10 @@ def get_topping_quantity_by_id(
         .filter(PizzaTypeToppingQuantity.topping_id == topping_id,
                 PizzaTypeToppingQuantity.pizza_type_id == pizza_type_id) \
         .first()
+    if entity:
+        logging.info('Retrieved topping quantity with ID {} for pizza type {}'.format(topping_id, pizza_type_id))
+    else:
+        logging.warning('No topping quantity found with ID {} for pizza type {}'.format(topping_id, pizza_type_id))
     return entity
 
 
@@ -78,4 +95,8 @@ def get_joined_topping_quantities_by_pizza_type(
 ):
     entities = db.query(PizzaTypeToppingQuantity) \
         .filter(PizzaTypeToppingQuantity.pizza_type_id == pizza_type_id)
+    if entities:
+        logging.info('Retrieved topping quantities for pizza type {}'.format(pizza_type_id))
+    else:
+        logging.warning('No topping quantities found for pizza type {}'.format(pizza_type_id))
     return entities.all()

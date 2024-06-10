@@ -18,6 +18,7 @@ def create_address(schema: AddressCreateSchema, db: Session):
 
 def get_address_by_id(address_id: uuid.UUID, db: Session):
     entity = db.query(Address).filter(Address.id == address_id).first()
+    logging.info(f'Retrieved address: {entity.id}')
     return entity
 
 
@@ -26,6 +27,7 @@ def delete_address_by_id(address_id: uuid.UUID, db: Session):
     if entity:
         db.delete(entity)
         db.commit()
+        logging.info(f'Deleted address: {entity.id}')
 
 
 def update_address(address: Address, changed_address: AddressCreateSchema, db: Session):
@@ -34,6 +36,7 @@ def update_address(address: Address, changed_address: AddressCreateSchema, db: S
 
     db.commit()
     db.refresh(address)
+    logging.info(f'Updated address: {address.id}')
     return address
 
 

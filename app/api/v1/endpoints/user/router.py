@@ -33,6 +33,7 @@ def get_all_users(
 
 @router.post('', response_model=UserSchema, status_code=status.HTTP_201_CREATED, tags=['user'])
 def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
+    logging.info(f'Creating user with username {user.username}')
     new_user = user_crud.create_user(user, db)
     return new_user
 
@@ -46,6 +47,7 @@ def update_user(
     user_found = user_crud.get_user_by_id(user_id, db)
 
     if user_found:
+        logging.info(f'Updating user with ID {user_id}')
         user_crud.update_user(user_found, changed_user, db)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     else:

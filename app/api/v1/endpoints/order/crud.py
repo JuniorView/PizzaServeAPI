@@ -24,6 +24,7 @@ def create_order(schema: OrderCreateSchema, db: Session):
 
 def get_order_by_id(order_id: uuid.UUID, db: Session):
     entity = db.query(Order).filter(Order.id == order_id).first()
+    logging.info(f'Order found with ID {order_id}')
     return entity
 
 
@@ -37,6 +38,7 @@ def delete_order_by_id(order_id: uuid.UUID, db: Session):
     if entity:
         db.delete(entity)
         db.commit()
+        logging.info(f'Order deleted with ID {order_id}')
 
 
 def update_order_status(order: Order, changed_order: OrderStatus, db: Session):
@@ -44,6 +46,7 @@ def update_order_status(order: Order, changed_order: OrderStatus, db: Session):
 
     db.commit()
     db.refresh(order)
+    logging.info(f'status for Order updated with ID {order.id}')
     return order
 
 
@@ -54,7 +57,7 @@ def create_pizza(pizza_type: PizzaType,
         entity.pizza_type_id = pizza_type.id
     db.add(entity)
     db.commit()
-    logging.info(f'Pizza created with ID {entity.id}')
+    logging.info(f'Pizza created with ID {pizza_type.id}')
     return entity
 
 
@@ -70,6 +73,7 @@ def add_pizza_to_order(order: Order, pizza_type: PizzaType,
 
 def get_pizza_by_id(pizza_id: uuid.UUID, db):
     entity = db.query(Pizza).filter(Pizza.id == pizza_id).first()
+    logging.info(f'Pizza found with ID {pizza_id}')
     return entity
 
 
@@ -90,6 +94,7 @@ def delete_pizza_from_order(order: Order, pizza_id: uuid.UUID, db: Session):
     if entity:
         db.delete(entity)
         db.commit()
+        logging.info(f'Pizza deleted with ID {pizza_id}')
         return True
     else:
         return False
@@ -104,6 +109,7 @@ def create_beverage_quantity(
     order.beverages.append(entity)
     db.commit()
     db.refresh(order)
+    logging.info(f'Beverage quantity created for order with ID {order.id}')
     return entity
 
 
@@ -116,6 +122,7 @@ def get_beverage_quantity_by_id(
         .filter(OrderBeverageQuantity.beverage_id == beverage_id,
                 OrderBeverageQuantity.order_id == order_id) \
         .first()
+    logging.info(f'Beverage quantity found for beverage with ID {beverage_id}')
     return entity
 
 
@@ -135,6 +142,7 @@ def update_beverage_quantity_of_order(order_id: uuid.UUID, beverage_id: uuid.UUI
         setattr(order_beverage, 'quantity', new_quantity)
         db.commit()
         db.refresh(order_beverage)
+        logging.info(f'Beverage quantity updated for order with ID {order_id} and beverage with ID {beverage_id}')
 
     return order_beverage
 
@@ -145,6 +153,7 @@ def delete_beverage_from_order(order_id: uuid.UUID, beverage_id: uuid.UUID, db: 
     if entity:
         db.delete(entity)
         db.commit()
+        logging.info(f'Beverage quantity deleted for order with ID {order_id} and beverage with ID {beverage_id}')
         return True
     else:
         return False
