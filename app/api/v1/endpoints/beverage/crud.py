@@ -34,10 +34,10 @@ def get_beverage_by_name(beverage_name: str, db: Session):
 
 
 def get_all_beverages(db: Session):
-    #return db.query(Beverage).all()
     beverages = db.query(Beverage).all()
     logging.info('Retrieved all beverages, count: {}'.format(len(beverages)))
     return beverages
+
 
 def update_beverage(beverage: Beverage, changed_beverage: BeverageCreateSchema, db: Session):
     for key, value in changed_beverage.dict().items():
@@ -57,4 +57,3 @@ def delete_beverage_by_id(beverage_id: uuid.UUID, db: Session):
         logging.info('Beverage deleted with name {} and ID {}'.format(entity.name, entity.id))
     else:
         logging.warning('no beverage found to delete with id {}'.format(beverage_id))
-

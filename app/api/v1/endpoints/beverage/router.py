@@ -26,7 +26,6 @@ router = APIRouter()
 
 @router.get('', response_model=List[BeverageListItemSchema], tags=['beverage'])
 def get_all_beverages(db: Session = Depends(get_db)):
-    logging.info(f'Getting all beverages')
     beverages = beverage_crud.get_all_beverages(db)
     logging.info(f'Got {len(beverages)} beverages')
     return beverages
