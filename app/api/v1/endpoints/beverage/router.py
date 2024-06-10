@@ -71,7 +71,7 @@ def update_beverage(
                 updated_beverage = beverage_crud.create_beverage(changed_beverage, db)
                 response.status_code = status.HTTP_201_CREATED
     else:
-        logging.error('Beverage not found with id {}'.format(beverage_id))
+        logging.error(f'Beverage not found with id {beverage_id}')
         raise HTTPException(status_code=404, detail=beverage_not_found)
 
     return updated_beverage
@@ -85,7 +85,7 @@ def get_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        logging.error('Beverage not found with id {}'.format(beverage_id))
+        logging.error(f'Beverage not found with id {beverage_id}')
         raise HTTPException(status_code=404, detail=beverage_not_found)
 
     return beverage
@@ -98,7 +98,7 @@ def delete_beverage(
     beverage = beverage_crud.get_beverage_by_id(beverage_id, db)
 
     if not beverage:
-        logging.error('Beverage not found with id {}'.format(beverage_id))
+        logging.error(f'Beverage not found with id {beverage_id}')
         raise HTTPException(status_code=404, detail=beverage_not_found)
 
     beverage_crud.delete_beverage_by_id(beverage_id, db)

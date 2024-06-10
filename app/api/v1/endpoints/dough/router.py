@@ -10,6 +10,8 @@ import app.api.v1.endpoints.dough.crud as dough_crud
 from app.api.v1.endpoints.dough.schemas import DoughSchema, DoughCreateSchema, DoughListItemSchema
 from app.database.connection import SessionLocal
 
+DOUGH_NOT_FOUND_WITH_ID_ = 'Dough not found with id {}'
+
 router = APIRouter()
 
 dough_not_found = 'Dough not found'
@@ -71,7 +73,7 @@ def update_dough(
                 logging.info('Dough updated with name {}'.format(updated_dough.name))
                 response.status_code = status.HTTP_201_CREATED
     else:
-        logging.error('Dough not found with id {}'.format(dough_id))
+        logging.error(DOUGH_NOT_FOUND_WITH_ID_.format(dough_id))
         raise HTTPException(status_code=404, detail=dough_not_found)
 
     return updated_dough
@@ -84,7 +86,7 @@ def get_dough(dough_id: uuid.UUID,
     dough = dough_crud.get_dough_by_id(dough_id, db)
 
     if not dough:
-        logging.error('Dough not found with id {}'.format(dough_id))
+        logging.error(DOUGH_NOT_FOUND_WITH_ID_.format(dough_id))
         raise HTTPException(status_code=404, detail=dough_not_found)
     return dough
 
@@ -94,7 +96,7 @@ def delete_dough(dough_id: uuid.UUID, db: Session = Depends(get_db)):
     dough = dough_crud.get_dough_by_id(dough_id, db)
 
     if not dough:
-        logging.error('Dough not found with id {}'.format(dough_id))
+        logging.error(DOUGH_NOT_FOUND_WITH_ID_.format(dough_id))
         raise HTTPException(status_code=404, detail=dough_not_found)
 
     dough_crud.delete_dough_by_id(dough_id, db)

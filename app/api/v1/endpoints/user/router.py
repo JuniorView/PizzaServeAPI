@@ -49,7 +49,7 @@ def update_user(
         user_crud.update_user(user_found, changed_user, db)
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     else:
-        logging.error('User {} not found'.format(user_id))
+        logging.error(f'User {user_id} not found')
         raise HTTPException(status_code=404, detail=user_not_found)
 
 
@@ -60,7 +60,7 @@ def get_user(user_id: uuid.UUID,
     user_found = user_crud.get_user_by_id(user_id, db)
 
     if not user_found:
-        logging.error('User {} not found'.format(user_id))
+        logging.error(f'User {user_id} not found')
         raise HTTPException(status_code=404, detail=user_not_found)
 
     return user_found
@@ -74,7 +74,7 @@ def delete_user(
     user_found = user_crud.get_user_by_id(user_id, db)
 
     if not user_found:
-        logging.error('User {} not found'.format(user_id))
+        logging.error(f'User {user_id} not found')
         raise HTTPException(status_code=404, detail=user_not_found)
 
     user_crud.delete_user_by_id(user_id, db)
