@@ -60,6 +60,7 @@ def update_topping(
     if topping_found:
         if topping_found.name == changed_topping.name:
             topping_crud.update_topping(topping_found, changed_topping, db)
+            logging.info(f'Topping {topping_found.name} with ID {topping_found.id} updated')
             return Response(status_code=status.HTTP_204_NO_CONTENT)
         else:
             topping_name_found = topping_crud.get_topping_by_name(changed_topping.name, db)
