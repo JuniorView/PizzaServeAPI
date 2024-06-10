@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from sqlalchemy.orm import Session
@@ -12,8 +13,10 @@ def beverage_is_available(beverage_id: uuid.UUID, amount: int, db: Session):
     # Check if Beverage exists
     if beverage:
         # If there is enough stock return true. Stock CAN be zero
+        logging.info(f'Enough stock for beverage {beverage.name} with ID {beverage_id} is available')
         return beverage.stock >= amount
     else:
+        logging.warning(f'There is not enough stock for beverage with ID {beverage_id}')
         return False
 
 
@@ -26,6 +29,7 @@ def change_stock_of_beverage(beverage_id: uuid.UUID, change_amount: int, db: Ses
         setattr(beverage, 'stock', beverage.stock + change_amount)
         db.commit()
         db.refresh(beverage)
+        logging.info(f'Changed stock for beverage {beverage.id} to {beverage.stock + change_amount}')
         return True
-
+    logging.warning(f'There is not enough stock for beverage {beverage_id}')
     return False
