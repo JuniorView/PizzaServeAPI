@@ -26,7 +26,9 @@ router = APIRouter()
 
 @router.get('', response_model=List[BeverageListItemSchema], tags=['beverage'])
 def get_all_beverages(db: Session = Depends(get_db)):
+    logging.info(f'Getting all beverages')
     beverages = beverage_crud.get_all_beverages(db)
+    logging.info(f'Got {len(beverages)} beverages')
     return beverages
 
 
@@ -70,6 +72,7 @@ def update_beverage(
             else:
                 updated_beverage = beverage_crud.create_beverage(changed_beverage, db)
                 response.status_code = status.HTTP_201_CREATED
+                logging.info('Beverage updated with name {}'.format(updated_beverage.name))
     else:
         logging.error(f'Beverage not found with id {beverage_id}')
         raise HTTPException(status_code=404, detail=beverage_not_found)
@@ -87,7 +90,7 @@ def get_beverage(
     if not beverage:
         logging.error(f'Beverage not found with id {beverage_id}')
         raise HTTPException(status_code=404, detail=beverage_not_found)
-
+    logging.info('Beverage found with id {}'.format(beverage_id))
     return beverage
 
 
@@ -102,4 +105,5 @@ def delete_beverage(
         raise HTTPException(status_code=404, detail=beverage_not_found)
 
     beverage_crud.delete_beverage_by_id(beverage_id, db)
+    logging.info('Beverage deleted with id {}'.format(beverage_id))
     return Response(status_code=status.HTTP_204_NO_CONTENT)
