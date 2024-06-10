@@ -24,7 +24,7 @@ def create_order(schema: OrderCreateSchema, db: Session):
 
 def get_order_by_id(order_id: uuid.UUID, db: Session):
     entity = db.query(Order).filter(Order.id == order_id).first()
-    logging.info(f'Order found with ID {entity.id}')
+    logging.info(f'Order found with ID {order_id}')
     return entity
 
 
@@ -38,7 +38,7 @@ def delete_order_by_id(order_id: uuid.UUID, db: Session):
     if entity:
         db.delete(entity)
         db.commit()
-        logging.info(f'Order deleted with ID {entity.id}')
+        logging.info(f'Order deleted with ID {order_id}')
 
 
 def update_order_status(order: Order, changed_order: OrderStatus, db: Session):
@@ -57,7 +57,7 @@ def create_pizza(pizza_type: PizzaType,
         entity.pizza_type_id = pizza_type.id
     db.add(entity)
     db.commit()
-    logging.info(f'Pizza created with ID {entity.id}')
+    logging.info(f'Pizza created with ID {pizza_type.id}')
     return entity
 
 
@@ -73,7 +73,7 @@ def add_pizza_to_order(order: Order, pizza_type: PizzaType,
 
 def get_pizza_by_id(pizza_id: uuid.UUID, db):
     entity = db.query(Pizza).filter(Pizza.id == pizza_id).first()
-    logging.info(f'Pizza found with ID {entity.id}')
+    logging.info(f'Pizza found with ID {pizza_id}')
     return entity
 
 
@@ -94,7 +94,7 @@ def delete_pizza_from_order(order: Order, pizza_id: uuid.UUID, db: Session):
     if entity:
         db.delete(entity)
         db.commit()
-        logging.info(f'Pizza deleted with ID {entity.id}')
+        logging.info(f'Pizza deleted with ID {pizza_id}')
         return True
     else:
         return False
@@ -122,7 +122,7 @@ def get_beverage_quantity_by_id(
         .filter(OrderBeverageQuantity.beverage_id == beverage_id,
                 OrderBeverageQuantity.order_id == order_id) \
         .first()
-    logging.info(f'Beverage quantity found with ID {entity.id}: {beverage_id}')
+    logging.info(f'Beverage quantity found for beverage with ID {beverage_id}')
     return entity
 
 
