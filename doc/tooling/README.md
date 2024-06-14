@@ -52,10 +52,20 @@ The script part defines the commands or script to be executed as part of a job. 
 # flake8 / flakeheaven
 
 - What is the purpose of flake8?
+  - Flake8 is a tool used to enforce coding standards in Python, ensuring adherence to the PEP 8 style 
+  guide and detecting various errors.
+
 
 - What types of problems does it detect
+  - Style Issues (PEP 8 standard)
+  - Syntax Errors (Code could fail to runtime)
+  - Logical Errors (potential unexpected behavior)
+
 
 - Why should you use a tool like flake8 in a serious project?
+  - Using Flake8 in a serious project ensures code consistency and quality by enforcing PEP 8 standards and detecting 
+  various errors early. It also streamlines code reviews and integrates with CI/CD pipelines,
+  enhancing overall development efficiency.
 
 ## Run flake8 on your local Computer
 
