@@ -86,14 +86,39 @@ If you like it convenient: Add a button for flake8 to your toolbar!
 # GrayLog
 
 - What is the purpose of GrayLog?
+   GrayLog is a powerful open-source log management tool that helps in collecting, indexing, and analyzing log data from various sources. It is used to monitor systems, troubleshoot issues, and gain insights from log data. 
+
 
 - What logging levels are available?
+   Logging levels determine the severity or importance of the messages being logged. Common logging levels include:
+
+     DEBUG: Detailed information, typically of interest only when diagnosing problems.
+     INFO: Confirm that things are working as expected.
+     WARN: An indication that something unexpected happened, or indicative of some problem in the near future (e.g., ‘disk space low’). The software is still working as expected.
+     ERROR: Due to a more serious problem, the software has not been able to perform some function.
+     FATAL: Severe errors that cause premature termination. Expect these to be immediately visible on a status console.
 
 - What is the default logging level?
+      For many systems and programming environments, the default logging level is often INFO or WARNING.
 
 - Give 3-4 examples for logging commands in Python:
   ```python
+Basic Logging Setup:
 
+import logging
+logging.basicConfig(level=logging.INFO)
+
+Logging a Debug Message:
+logging.debug("This is a debug message")
+
+Logging an Info Message:
+logging.info("This is an info message")
+
+Logging a Warning Message:
+logging.warning("This is a warning message")
+
+Logging an Error Message:
+logging.error("This is an error message")
   ```
 
 # SonarQube
