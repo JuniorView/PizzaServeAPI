@@ -370,6 +370,7 @@ def get_user_of_order(
     user = order.user
     return user
 
+
 @router.put('/{order_id}',
             response_model=OrderUpdateOrderStatusSchema,
             tags=['order'],
