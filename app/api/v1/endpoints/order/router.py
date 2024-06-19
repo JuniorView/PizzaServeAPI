@@ -394,3 +394,18 @@ def update_status_of_order(
     else:
         logging.error(f'Order {order_id} not found')
         raise HTTPException(status_code=404, detail=order_not_found)
+
+
+@router.get('/{order_status}',
+            response_model=List[OrderSchema],
+            tags=['order'])
+def get_orders_by_status(
+        order_status: OrderStatus,
+        db: Session = Depends(get_db)):
+    orders = order_crud.get_orders_by_status(order_status, db)
+    if not orders:
+        logging.error(f'No orders found with status {status}')
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    return orders
+
