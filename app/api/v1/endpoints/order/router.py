@@ -408,4 +408,3 @@ def get_orders_by_status(
         return Response(status_code=status.HTTP_404_NOT_FOUND)
 
     return orders
-
