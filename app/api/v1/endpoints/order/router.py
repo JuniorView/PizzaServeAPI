@@ -396,7 +396,7 @@ def update_status_of_order(
         raise HTTPException(status_code=404, detail=order_not_found)
 
 
-@router.get('/{order_status}',
+@router.get('/status/{order_status}',
             response_model=List[OrderSchema],
             tags=['order'])
 def get_orders_by_status(
