@@ -385,6 +385,10 @@ def update_status_of_order(
         logging.error(f'Order not found. Order ID {order_id} does not exist')
         return Response(status_code=status.HTTP_404_NOT_FOUND)
 
+    if order_status not in OrderStatus:
+        logging.error(f'Invalid order status: {order_status}')
+        return Response(status_code=status.HTTP_404_NOT_FOUND)
+
     # Update
     new_order_status = order_crud.update_order_status(
         order, order_status, db)
@@ -403,8 +407,13 @@ def get_orders_by_status(
         order_status: OrderStatus,
         db: Session = Depends(get_db)):
     orders = order_crud.get_orders_by_status(order_status, db)
-    if not orders:
-        logging.error(f'No orders found with status {status}')
+
+    if order_status not in OrderStatus:
+        logging.error(f'Invalid order status: {order_status}')
         return Response(status_code=status.HTTP_404_NOT_FOUND)
+
+    if not orders:
+        logging.warning(f'No orders found with status {status}')
+        return []
 
     return orders
