@@ -25,6 +25,13 @@ class OrderStatus(str, enum.Enum):
     COMPLETED = 'COMPLETED'
 
 
+# Enum for SauceSpiciness
+class SauceSpiciness(str, enum.Enum):
+    LOW = 'LOW'
+    MEDIUM = 'MEDIUM'
+    HIGH = 'HIGH'
+
+
 # models
 class PizzaType(Base):
     __tablename__ = 'pizza_type'
@@ -90,6 +97,21 @@ class Dough(Base):
 
     def __repr__(self):
         return "Dough(id='%s', name='%s', price='%s', description='%s', stock='%s')" \
+            % (self.id, self.name, self.price, self.description, self.stock)
+
+
+class Sauce(Base):
+    __tablename__ = 'sauce'
+
+    id: Mapped[uuid.UUID] = mapped_column(primary_key=True, default=uuid.uuid4)
+    name: Mapped[str] = mapped_column(unique=True, nullable=False)
+    price: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
+    description: Mapped[str] = mapped_column(nullable=False, default='')
+    stock: Mapped[int] = mapped_column(CheckConstraint(STOCK_), nullable=False)
+    sauce_spiciness: Mapped[SauceSpiciness] = mapped_column(nullable=False)
+
+    def __repr__(self):
+        return "Sauce(id='%s', name='%s', price='%s', description='%s', stock='%s')" \
             % (self.id, self.name, self.price, self.description, self.stock)
 
 
