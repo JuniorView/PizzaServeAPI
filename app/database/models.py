@@ -24,12 +24,12 @@ class OrderStatus(str, enum.Enum):
     IN_DELIVERY = 'IN_DELIVERY'
     COMPLETED = 'COMPLETED'
 
+
 # Enum for SauceSpiciness
 class SauceSpiciness(str, enum.Enum):
     LOW = 'LOW'
     MEDIUM = 'MEDIUM'
     HIGH = 'HIGH'
-
 
 
 # models
@@ -99,6 +99,7 @@ class Dough(Base):
         return "Dough(id='%s', name='%s', price='%s', description='%s', stock='%s')" \
             % (self.id, self.name, self.price, self.description, self.stock)
 
+
 class Sauce(Base):
     __tablename__ = 'sauce'
 
@@ -112,6 +113,7 @@ class Sauce(Base):
     def __repr__(self):
         return "Sauce(id='%s', name='%s', price='%s', description='%s', stock='%s')" \
             % (self.id, self.name, self.price, self.description, self.stock)
+
 
 class User(Base):
     __tablename__ = 'user'
