@@ -4,8 +4,8 @@ import uuid
 from pydantic import BaseModel
 
 
-# Enum for Spiciness
-class Spiciness(str, enum.Enum):
+# Enum for SauceSpiciness
+class SauceSpiciness(str, enum.Enum):
     LOW = 'LOW'
     MEDIUM = 'MEDIUM'
     HIGH = 'HIGH'
@@ -15,7 +15,7 @@ class SauceBaseSchema(BaseModel):
     name: str
     price: float
     description: str
-    spiciness: Spiciness
+    sauce_spiciness: SauceSpiciness
 
     class Config:
         orm_mode = True
@@ -27,7 +27,7 @@ class SauceCreateSchema(SauceBaseSchema):
 
 class SauceSchema(SauceCreateSchema):
     id: uuid.UUID
-    spiciness: Spiciness
+    sauce_spiciness: SauceSpiciness
 
 
 class SauceListItemSchema(BaseModel):

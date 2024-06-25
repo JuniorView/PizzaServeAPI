@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=False),
     sa.Column('description', sa.String(), nullable=False),
     sa.Column('stock', sa.Integer(), nullable=False),
-    sa.Column('spiciness', sa.Enum('LOW', 'MEDIUM', 'HIGH', name='spiciness'), nullable=False),
+    sa.Column('sauce_spiciness', sa.Enum('LOW', 'MEDIUM', 'HIGH', name='sauce_spiciness'), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )

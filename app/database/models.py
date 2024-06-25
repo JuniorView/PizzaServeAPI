@@ -24,8 +24,8 @@ class OrderStatus(str, enum.Enum):
     IN_DELIVERY = 'IN_DELIVERY'
     COMPLETED = 'COMPLETED'
 
-# Enum for Spiciness
-class Spiciness(str, enum.Enum):
+# Enum for SauceSpiciness
+class SauceSpiciness(str, enum.Enum):
     LOW = 'LOW'
     MEDIUM = 'MEDIUM'
     HIGH = 'HIGH'
@@ -107,7 +107,7 @@ class Sauce(Base):
     price: Mapped[decimal.Decimal] = mapped_column(Numeric(10, 2), nullable=False)
     description: Mapped[str] = mapped_column(nullable=False, default='')
     stock: Mapped[int] = mapped_column(CheckConstraint(STOCK_), nullable=False)
-    spiciness: Mapped[Spiciness] = mapped_column(nullable=False)
+    sauce_spiciness: Mapped[SauceSpiciness] = mapped_column(nullable=False)
 
     def __repr__(self):
         return "Sauce(id='%s', name='%s', price='%s', description='%s', stock='%s')" \
