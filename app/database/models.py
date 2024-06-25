@@ -24,7 +24,7 @@ class OrderStatus(str, enum.Enum):
     IN_DELIVERY = 'IN_DELIVERY'
     COMPLETED = 'COMPLETED'
 
-# Enum for OrderStatus
+# Enum for Spiciness
 class Spiciness(str, enum.Enum):
     LOW = 'LOW'
     MEDIUM = 'MEDIUM'
