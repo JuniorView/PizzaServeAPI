@@ -50,6 +50,12 @@ variables:
   dough_description: "Neapolitan Dough"
   dough_stock: 10
 
+  sauce_name: "sauce_name"
+  sauce_price: 5.20
+  sauce_description: "Delicious homemade pizza sauce 1"
+  sauce_spiciness: "HIGH"
+  sauce_stock: 100
+
   beverage_name: "Coca Cola"
   beverage_price: 4.00
   beverage_description: "Coca Cola"

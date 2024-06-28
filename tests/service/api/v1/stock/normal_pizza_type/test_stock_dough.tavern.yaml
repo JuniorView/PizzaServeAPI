@@ -39,13 +39,33 @@ stages:
         json:
           dough_id: id
 
+  #Create Sauce with 0 stock
+  - name: Verify that status code equals 201 when we create a new sauce and the sauce is returned
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces
+      json: &sauce
+        name: "{dough_name:s}"
+        price: !float "{dough_price:f}"
+        description: "{dough_description}"
+        sauce_spiciness: "{sauce_spiciness}"
+        stock: !int 0
+      method: POST
+    response:
+      status_code: 201
+      json:
+        <<: *sauce
+        id: !anything
+      save:
+        json:
+          sauce_id: id
+
   #Create pizza_type
   - type: ref
     id: create_pizza_type
 
 
 #---------------------Test Insufficient Stock----------------------------
-  - name: Add Pizza with insufficient dough stock to Order and verify 409 status code
+  - name: Add Pizza with insufficient dough and sauce stock to Order and verify 409 status code
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/order/{order_id}/pizzas
       method: POST
@@ -62,6 +82,15 @@ stages:
       json:
           <<: *dough
           stock: !int 1
+
+  #-----------------------Increase sauce Stock
+  - name: Update sauce stock to 1
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces/{sauce_id}
+      method: PUT
+      json:
+        <<: *sauce
+        stock: !int 1
 
 #---------------------Test Insufficient Stock----------------------------
   #Add Pizza to Order
@@ -89,6 +118,16 @@ stages:
         stock: !int 0
         id: "{dough_id}"
 
+  - name: Verify if sauce stock was reduced by one
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces/{sauce_id}
+      method: GET
+    response:
+      json:
+        <<: *sauce
+        stock: !int 0
+        id: "{sauce_id}"
+
   #Delete Pizza from Order
   - name: Delete Pizza from Order
     request:
@@ -108,6 +147,16 @@ stages:
           <<: *dough
           id: "{dough_id}"
           stock: !int 1
+
+  - name: Verify if sauce stock was increased to the original stock
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces/{sauce_id}
+      method: GET
+    response:
+      json:
+        <<: *sauce
+        id: "{sauce_id}"
+        stock: !int 1
 
   #Add pizza again to check for stock increase when deleting an order
   - name: Add Pizza with sufficient stock to Order and verify 200 status code
@@ -142,6 +191,16 @@ stages:
           id: "{dough_id}"
           stock: !int 1
 
+  - name: Verify if sauce stock was increased to the original stock
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces/{sauce_id}
+      method: GET
+    response:
+      json:
+        <<: *sauce
+        id: "{sauce_id}"
+        stock: !int 1
+
 #---------------------Delete Everything else-----------------------------------
   #Delete Pizza_type
   - type: ref
@@ -151,6 +210,14 @@ stages:
   - name: Delete dough
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/doughs/{dough_id}
+      method: DELETE
+    response:
+      status_code: 204
+
+  #Delete Sauce
+  - name: Delete sauce
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces/{sauce_id}
       method: DELETE
     response:
       status_code: 204
