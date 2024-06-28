@@ -1,0 +1,11 @@
+---
+
+name: Common
+description: common test information
+
+variables:
+   sauce_name: "new_sauce_name"
+   sauce_price: 10
+   sauce_description: "Delicious homemade pizza sauce"
+   sauce_spiciness: "LOW"
+   sauce_stock: 100

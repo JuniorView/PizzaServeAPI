@@ -19,3 +19,9 @@ variables:
   dough_price: 1.50
   dough_description: "Test Dough"
   dough_stock: 10
+
+  sauce_name: "new_sauce_name"
+  sauce_price: 10
+  sauce_description: "Delicious homemade pizza sauce"
+  sauce_stock: 100
+  sauce_spiciness: "LOW"

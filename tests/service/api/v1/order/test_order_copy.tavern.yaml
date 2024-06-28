@@ -6,6 +6,7 @@ includes:
   - !include common.yaml
   - !include ../order/order_stage.yaml
   - !include ../dough/dough_stage.yaml
+  - !include ../sauce/sauce_stage.yaml
   - !include ../beverage/beverage_stage.yaml
   - !include ../pizza_type/pizza_type_stage.yaml
   - !include ../users/user_stage.yaml
@@ -28,6 +29,10 @@ stages:
   #Create Dough
   - type: ref
     id: create_dough
+
+  #Create Dough
+  - type: ref
+    id: create_sauce
 
   #Create pizza_type
   - type: ref
@@ -116,7 +121,7 @@ stages:
       status_code: 404
 
   # Check Dough Stock
-  - name: Verify that dough stock was decreades correctly
+  - name: Verify that dough stock was decreased correctly
     request:
       url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/doughs/{dough_id}
       method: GET
@@ -128,6 +133,21 @@ stages:
         # Starting stock is 10. 10-1-1=8
         stock: 8
         id: "{dough_id}"
+
+  # Check Sauce Stock
+  - name: Verify that sauce stock was decreased correctly
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces/{sauce_id}
+      method: GET
+    response:
+      json:
+        name: "{sauce_name:s}"
+        price: !float "{sauce_price:f}"
+        description: "{sauce_description}"
+        sauce_spiciness: "{sauce_spiciness}"
+        # Starting stock is 10. 10-1-1=8
+        stock: 8
+        id: "{sauce_id}"
 
   #Check beverage stock
   - name: Verify that beverage stock was decreades correctly
@@ -153,6 +173,18 @@ stages:
         name: "{dough_name:s}"
         price: !float "{dough_price:f}"
         description: "{dough_description}"
+        stock: 0
+
+  # Reduce Sauce Stock to 0
+  - name: Update sauce stock to 0
+    request:
+      url: http://{tavern.env_vars.API_SERVER}:{tavern.env_vars.API_PORT}/v1/sauces/{sauce_id}
+      method: PUT
+      json:
+        name: "{sauce_name:s}"
+        price: !float "{sauce_price:f}"
+        description: "{sauce_description}"
+        sauce_spiciness: "{sauce_spiciness}"
         stock: 0
 
   #Create Order
@@ -199,6 +231,10 @@ stages:
   #Delete Dough
   - type: ref
     id: delete_dough
+
+  #Delete Dough
+  - type: ref
+    id: delete_sauce
 
   #Delete user
   - type: ref

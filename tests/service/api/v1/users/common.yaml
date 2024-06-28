@@ -17,3 +17,9 @@ variables:
   pizza_name: "Salami"
   pizza_price: 5
   pizza_description: "Italian quality"
+
+  sauce_name: "new_sauce_name"
+  sauce_price: 10
+  sauce_description: "Delicious homemade pizza sauce"
+  sauce_spiciness: "LOW"
+  sauce_stock: 100

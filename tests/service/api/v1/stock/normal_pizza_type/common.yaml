@@ -29,3 +29,9 @@ variables:
   stock_more_than_quantity: 11
   quantity_equal_to_stock: 10
   quantity_more_than_stock: 11
+
+  sauce_name: "new_sauce_name"
+  sauce_price: 10
+  sauce_description: "Delicious homemade pizza sauce"
+  sauce_spiciness: "LOW"
+  sauce_stock: 2
