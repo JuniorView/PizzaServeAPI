@@ -4,6 +4,8 @@ import app.api.v1.endpoints.pizza_type.crud as pizza_type_crud
 from app.api.v1.endpoints.pizza_type.schemas import PizzaTypeCreateSchema
 import app.api.v1.endpoints.dough.crud as dough_crud
 from app.api.v1.endpoints.dough.schemas import DoughCreateSchema
+import app.api.v1.endpoints.sauce.crud as sauce_crud
+from app.api.v1.endpoints.sauce.schemas import SauceCreateSchema
 from app.database.connection import SessionLocal
 
 
@@ -31,12 +33,25 @@ def test_pizza_type_create_read_delete(db):
     dough = DoughCreateSchema(**dough_data)
     db_dough = dough_crud.create_dough(dough, db)
 
+    # Arrange: Instantiate a new sauce object for pizza type
+    sauce_data = {
+        'name': 'Sauce test name',
+        'price': 10,
+        'description': 'Sauce test description',
+        'stock': 20,
+        'sauce_spiciness': 'LOW',
+    }
+
+    sauce = SauceCreateSchema(**sauce_data)
+    db_sauce = sauce_crud.create_sauce(sauce, db)
+
     # Arrange: Instantiate a new pizza type object
     pizza_type_data = {
         'name': new_pizza_type_name,
         'price': 25,
         'description': 'Pizza type test description',
         'dough_id': db_dough.id,
+        'sauce_id': db_sauce.id,
     }
 
     pizza_type = PizzaTypeCreateSchema(**pizza_type_data)
